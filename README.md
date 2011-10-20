@@ -43,7 +43,7 @@ Going to your newly created app's url should now give you "Hello."
 
 **Important:** Heroku by default idles out free applications (those that only use 1 dyno)
 after a couple of minutes and further requests need to spin up a whole new instance, which
-takes some time. To prevent your app from idling out, and also to get the benefit of availability monitoring, use a service like [WasItUp](https://wasitup.com/) to monitor
+takes some time. To prevent your app from idling out, and also to get the benefit of availability monitoring, use a service like [WasItUp](http://wasitup.com/) to monitor
 the site. Simply go to WasItUp, enter your app url, expect the content to be "Hello." and
 enter your mail address. Your proxy should be up all night.
 
