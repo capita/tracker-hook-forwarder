@@ -6,12 +6,14 @@
 
 ## Usage
 
-Create a Gemfile containing:
+In a new app folder, add those files:
+
+A Gemfile containing:
 
     source :rubygems
     gem 'pivotal-hook-proxy'
 
-Create a config.ru:
+A config.ru:
 
     require 'bundler/setup'
     require 'pivotal-hook-proxy'
@@ -23,10 +25,27 @@ Create a config.ru:
 
     run PivotalHookProxy
 
-Deploy the application using a rack-compatible web server, then configure your individual Pivotal Tracker projects to post Activity Web Hooks to:
+Deploy the application using a rack-compatible web server (or Heroku, see section below), then configure your individual Pivotal Tracker projects to post Activity Web Hooks to:
 
     http://yourproxy.url/activity/project_a # for Project A
     http://yourproxy.url/activity/project_b # for Project B
+
+## Running on Heroku
+
+Arguably the easiest way to get the proxy up and running is to spin up a Heroku app.
+Assuming you've got the `heroku` gem installed and configured and the configuration
+set up as above using git, run:
+
+    heroku create your-app-name --stack cedar
+    git push heroku master
+
+Going to your newly created app's url should now give you "Hello."
+
+**Important:** Heroku by default idles out free applications (those that only use 1 dyno)
+after a couple of minutes and further requests need to spin up a whole new instance, which
+takes some time. To prevent your app from idling out, and also to get the benefit of availability monitoring, use a service like [WasItUp](https://wasitup.com/) to monitor
+the site. Simply go to WasItUp, enter your app url, expect the content to be "Hello." and
+enter your mail address. Your proxy should be up all night.
 
 ## Developer notes
 
