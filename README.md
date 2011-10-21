@@ -37,6 +37,13 @@ Assuming you've got the `heroku` gem installed and configured and the configurat
 set up as above using git, run:
 
     heroku create your-app-name --stack cedar
+
+You might also want to add `thin` to your Gemfile and a `Procfile` containing:
+
+    web: bundle exec thin start -p $PORT
+
+Then commit your changes and push your app to heroku:
+
     git push heroku master
 
 Going to your newly created app's url should now give you "Hello."
