@@ -14,7 +14,7 @@ class PivotalHookProxy
     end
 
     def forward(body)
-      response = Forwarding.post(url, :body => body).response
+      response = Forwarding.post(url, :body => body, :headers => {"Content-Type" => 'application/xml'}).response
       if response.kind_of?(Net::HTTPSuccess)
         PivotalHookProxy.logger.info "Forwarded to #{url}:\n#{body}"
         true

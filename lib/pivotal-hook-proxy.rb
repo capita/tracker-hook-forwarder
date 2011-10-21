@@ -68,7 +68,12 @@ class PivotalHookProxy
   end
 
   def post_body
-    @post_body ||= request.body.read
+    return @post_body if @post_body
+    @post_body = ""
+    while data = request.body.read
+      @post_body << data
+    end
+    @post_body
   end
 
   def requested_project_name
