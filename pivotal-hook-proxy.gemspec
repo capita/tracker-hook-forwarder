@@ -15,6 +15,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rack-test', '~> 0.6.1'
   gem.add_development_dependency 'rr', '~> 1.0.4'
   gem.add_development_dependency 'artifice', '~> 0.6'
+  gem.add_development_dependency 'simplecov'
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
