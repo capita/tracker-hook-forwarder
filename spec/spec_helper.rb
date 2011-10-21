@@ -7,3 +7,6 @@ require 'rack/test'
 require 'rr'
 require 'artifice'
 require 'pivotal-hook-proxy'
+
+# Do not show log statements while testing
+PivotalHookProxy.logger.level = Logger::FATAL

@@ -1,3 +1,5 @@
+require 'logger'
+
 class PivotalHookProxy
   autoload :Forwarding, 'pivotal-hook-proxy/forwarding'
   autoload :RackIntegration, 'pivotal-hook-proxy/rack_integration'
@@ -6,6 +8,14 @@ class PivotalHookProxy
   class << self
     def call(env)
       new(env).process
+    end
+
+    def logger
+      return @logger if @logger
+      @logger = Logger.new(STDOUT)
+      @logger.level = Logger::INFO
+      @logger.datetime_format = "%Y-%m-%d %H:%M:%S"
+      @logger
     end
 
     def forwardings
@@ -33,19 +43,23 @@ class PivotalHookProxy
   def initialize(env)
     @env = env
     @request = Rack::Request.new(env)
+    PivotalHookProxy.logger.info "#{request.request_method} #{request.fullpath}"
   end
 
   def process
     if activity_hook_triggered?
+      PivotalHookProxy.logger.info "Activity Hook triggered for #{requested_project_name} with:\n#{post_body}"
       forwardings.each {|forwarding| forwarding.forward post_body }
       return [201, {"Content-Type" => 'application/xml'}, [post_body]]
 
     elsif request.get? and request.path == '/'
       return [200, {"Content-Type" => 'text/plain'}, ['Hello.']]
     else
+      PivotalHookProxy.logger.info "Could not find #{request.request_method} #{request.fullpath}"
       return [404, {"Content-Type" => 'text/plain'}, ['Resource not found']]
     end
   rescue => err
+    PivotalHookProxy.logger.warn "#{request.request_method} #{request.fullpath} caused an exception: #{err}\n#{err.backtrace}"
     return [500, {"Content-Type" => 'text/plain'}, ['Something went wrong :(']]
   end
 

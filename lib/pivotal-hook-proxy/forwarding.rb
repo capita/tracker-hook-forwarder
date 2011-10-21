@@ -14,12 +14,16 @@ class PivotalHookProxy
     end
 
     def forward(body)
-      if Forwarding.post(url, :body => body).response.kind_of?(Net::HTTPSuccess)
+      response = Forwarding.post(url, :body => body).response
+      if response.kind_of?(Net::HTTPSuccess)
+        PivotalHookProxy.logger.info "Forwarded to #{url}:\n#{body}"
         true
       else 
+        PivotalHookProxy.logger.warn "Forwarding to #{url} failed with #{response.class}:\n#{body}"
         false
       end
     rescue => err
+      PivotalHookProxy.logger.error "Forwarding to #{url} caused an error #{err}:\n#{body}"
       false
     end
   end
