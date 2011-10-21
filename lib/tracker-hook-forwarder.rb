@@ -1,9 +1,8 @@
 require 'logger'
 
-class PivotalHookProxy
-  autoload :Forwarding, 'pivotal-hook-proxy/forwarding'
-  autoload :RackIntegration, 'pivotal-hook-proxy/rack_integration'
-
+class TrackerHookForwarder
+  autoload :Forwarding, 'tracker-hook-forwarder/forwarding'
+  autoload :RackIntegration, 'tracker-hook-forwarder/rack_integration'
 
   class << self
     def call(env)
@@ -43,23 +42,23 @@ class PivotalHookProxy
   def initialize(env)
     @env = env
     @request = Rack::Request.new(env)
-    PivotalHookProxy.logger.info "#{request.request_method} #{request.fullpath}"
+    TrackerHookForwarder.logger.info "#{request.request_method} #{request.fullpath}"
   end
 
   def process
     if activity_hook_triggered?
-      PivotalHookProxy.logger.info "Activity Hook triggered for #{requested_project_name} with:\n#{post_body}"
+      TrackerHookForwarder.logger.info "Activity Hook triggered for #{requested_project_name} with:\n#{post_body}"
       forwardings.each {|forwarding| forwarding.forward post_body }
       return [201, {"Content-Type" => 'application/xml'}, [post_body]]
 
     elsif request.get? and request.path == '/'
       return [200, {"Content-Type" => 'text/plain'}, ['Hello.']]
     else
-      PivotalHookProxy.logger.info "Could not find #{request.request_method} #{request.fullpath}"
+      TrackerHookForwarder.logger.info "Could not find #{request.request_method} #{request.fullpath}"
       return [404, {"Content-Type" => 'text/plain'}, ['Resource not found']]
     end
   rescue => err
-    PivotalHookProxy.logger.warn "#{request.request_method} #{request.fullpath} caused an exception: #{err}\n#{err.backtrace}"
+    TrackerHookForwarder.logger.warn "#{request.request_method} #{request.fullpath} caused an exception: #{err}\n#{err.backtrace}"
     return [500, {"Content-Type" => 'text/plain'}, ['Something went wrong :(']]
   end
 
@@ -84,9 +83,9 @@ class PivotalHookProxy
   end
 
   def forwardings
-    @forwardings ||= PivotalHookProxy.forwardings_for(requested_project_name)
+    @forwardings ||= TrackerHookForwarder.forwardings_for(requested_project_name)
   end
 end
 
-# Rack config.ru shorthand
-Rack::Builder.send :include, PivotalHookProxy::RackIntegration if defined?(Rack::Builder)
+# Rack config.ru shorthand for setting up forwardings
+Rack::Builder.send :include, TrackerHookForwarder::RackIntegration if defined?(Rack::Builder)

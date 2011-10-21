@@ -1,4 +1,4 @@
-# Pivotal Hook Proxy
+# Pivotal Tracker Activity Webhook Forwarder
 
 **A simple Rack app that allows you to use any number of Activity Web Hooks on your Pivotal Tracker projects by acting as an endpoint to them and forwarding the calls from Tracker to any number of configurable other urls**
 
@@ -8,22 +8,22 @@
 
 In a new app folder, add those files:
 
-A Gemfile containing:
+A `Gemfile` containing:
 
     source :rubygems
-    gem 'pivotal-hook-proxy'
+    gem 'tracker-hook-forwarder'
 
-A config.ru:
+A `config.ru` containing:
 
     require 'bundler/setup'
-    require 'pivotal-hook-proxy'
+    require 'tracker-hook-forwarder'
 
     forward 'project_a', 'https://your.endpoint.com/for/tracker'
     forward 'project_a', 'https://someother.com/tracker?token=1234'
 
     forward 'project_b', 'https://someother.com/tracker?token=1234'    
 
-    run PivotalHookProxy
+    run TrackerHookForwarder
 
 Deploy the application using a rack-compatible web server (or Heroku, see section below), then configure your individual Pivotal Tracker projects to post Activity Web Hooks to:
 

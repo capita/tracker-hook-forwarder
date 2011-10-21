@@ -1,14 +1,14 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
-describe PivotalHookProxy do
+describe TrackerHookForwarder do
   include Rack::Test::Methods
   include RR::Adapters::TestUnit
 
   def app
-    PivotalHookProxy
+    TrackerHookForwarder
   end
 
-  before { PivotalHookProxy.reset_forwardings! }
+  before { TrackerHookForwarder.reset_forwardings! }
 
   describe "GET /" do
     before(:each) { get "/" }
@@ -55,11 +55,11 @@ describe PivotalHookProxy do
 
   describe "POST /activity/my_project with forwardings" do
     before(:each) do
-      PivotalHookProxy.add_forwarding 'my_project', 'http://localhost:9292'
+      TrackerHookForwarder.add_forwarding 'my_project', 'http://localhost:9292'
 
       # Expect forward method to be called on this only forwarding, using the request body
       # and returning true
-      mock(PivotalHookProxy.forwardings_for(:my_project).first).forward('<xml></xml>') { true }
+      mock(TrackerHookForwarder.forwardings_for(:my_project).first).forward('<xml></xml>') { true }
 
       post '/activity/my_project', "<xml></xml>"
     end

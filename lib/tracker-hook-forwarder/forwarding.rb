@@ -1,7 +1,7 @@
 require 'httparty'
 require 'uri'
 
-class PivotalHookProxy
+class TrackerHookForwarder
   class Forwarding
     attr_reader :url
     include HTTParty
@@ -16,14 +16,14 @@ class PivotalHookProxy
     def forward(body)
       response = Forwarding.post(url, :body => body, :headers => {"Content-Type" => 'application/xml'}).response
       if response.kind_of?(Net::HTTPSuccess)
-        PivotalHookProxy.logger.info "Forwarded to #{url}:\n#{body}"
+        TrackerHookForwarder.logger.info "Forwarded to #{url}:\n#{body}"
         true
       else 
-        PivotalHookProxy.logger.warn "Forwarding to #{url} failed with #{response.class}:\n#{body}"
+        TrackerHookForwarder.logger.warn "Forwarding to #{url} failed with #{response.class}:\n#{body}"
         false
       end
     rescue => err
-      PivotalHookProxy.logger.error "Forwarding to #{url} caused an error #{err}:\n#{body}"
+      TrackerHookForwarder.logger.error "Forwarding to #{url} caused an error #{err}:\n#{body}"
       false
     end
   end

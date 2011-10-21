@@ -10,7 +10,7 @@ require 'minitest/mock'
 require 'rack/test'
 require 'rr'
 require 'artifice'
-require 'pivotal-hook-proxy'
+require 'tracker-hook-forwarder'
 
 # Do not show log statements while testing
-PivotalHookProxy.logger.level = Logger::FATAL
+TrackerHookForwarder.logger.level = Logger::FATAL
