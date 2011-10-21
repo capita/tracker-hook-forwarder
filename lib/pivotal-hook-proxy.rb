@@ -70,7 +70,7 @@ class PivotalHookProxy
   def post_body
     return @post_body if @post_body
     @post_body = ""
-    while data = request.body.read
+    while data = request.body.read(1024)
       @post_body << data
     end
     @post_body
