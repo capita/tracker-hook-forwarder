@@ -2,8 +2,6 @@
 
 **A simple Rack app that allows you to use any number of Activity Web Hooks on your Pivotal Tracker projects by acting as an endpoint to them and forwarding the calls from Tracker to any number of configurable other urls**
 
-***Note: This is a work in progress and has not been released as a gem yet!***
-
 ## Usage
 
 In a new app folder, add those files:
@@ -29,6 +27,12 @@ Deploy the application using a rack-compatible web server (or Heroku, see sectio
 
     http://yourproxy.url/activity/project_a # for Project A
     http://yourproxy.url/activity/project_b # for Project B
+
+For example, we use it to notify both our [Hipchat](http://www.hipchat.com) team room and our own 
+[Redmine-Tracker plugin](https://github.com/capita/redmine_trackmine) using a config like this:
+
+    forward 'some_project', 'http://redmine.url.com/pivotal_activity.xml'
+    forward 'some_project', 'https://api.hipchat.com/v1/webhooks/pivotaltracker/?auth_token=API_TOKEN&room_id=ROOM_ID'
 
 ## Running on Heroku
 
