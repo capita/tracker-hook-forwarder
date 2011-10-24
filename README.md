@@ -34,6 +34,13 @@ For example, we use it to notify both our [Hipchat](http://www.hipchat.com) team
     forward 'some_project', 'http://redmine.url.com/pivotal_activity.xml'
     forward 'some_project', 'https://api.hipchat.com/v1/webhooks/pivotaltracker/?auth_token=API_TOKEN&room_id=ROOM_ID'
 
+## Testing
+
+[Postbin](http://www.postbin.org/) is a handy way to check whether requests are forwarded 
+correctly. Go to http://www.postbin.org/ and create a bin, then configure it for one of your 
+projects using `forward 'project', 'http://www.postbin.org/TOKEN'`. Going to your postbin url
+should give you a list of all activity hooks tracker has sent to you.
+
 ## Running on Heroku
 
 Arguably the easiest way to get the proxy up and running is to spin up a Heroku app.
